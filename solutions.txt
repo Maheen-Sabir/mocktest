@@ -1,9 +1,9 @@
 Your code =:= maheen123
-[Ex 01] Link to your repo =:= https://github.com/Maheen-Sabir/ASE00-maheen123
-[Ex 05] Command to create the image =:= 
-[Ex 05] Command to execute the container =:= 
-[Ex 05] PORTS string of output of the container list =:= 
-[Ex 05] ["Config"]["Volumes"] field =:= 
+[Ex 01] Link to your repo =:= https://github.com/Maheen-Sabir/mocktesthttps://github.com/Maheen-Sabir/ASE00-maheen123
+[Ex 05] Command to create the image =:= docker build -t mockex .
+[Ex 05] Command to execute the container =:= docker run --name mockexcont -p 5001:5002 mockex
+[Ex 05] PORTS string of output of the container list =:= 5001/tcp, 0.0.0.0:5001->5002/tcp
+[Ex 05] ["Config"]["Volumes"] field =:=  null
 [Ex 09] Name of endpoint with the most Locust requests =:= 
 [Ex 09] Name of endpoint with the most failed Locust requests =:= 
 [Ex 09] Name of endpoint with the highest median response time =:= 

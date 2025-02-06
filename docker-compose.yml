@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  ex1:
+    build: ./app
+    ports:
+      - "8089:5001"
+
+  locust:
+    build: 
+      context: .
+      dockerfile: Dockerfile_locust
+    ports:
+      - "8090:8089"
+   

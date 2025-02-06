@@ -1,9 +1,14 @@
+from flask import Flask, request, jsonify
 from flask import Flask, request, make_response, jsonify
 from datetime import date
-import random, operator, time, hashlib
+import random
+import operator
+import time
+import hashlib
 
-def create_header(X,response):
-    value = random.randint(0,X)
+
+def create_header(X, response):
+    value = random.randint(0, X)
     response.headers['exam'] = str(value)
     return value, response
 
@@ -11,64 +16,99 @@ def create_header(X,response):
 def calc(X):
     return X
 
+
 app = Flask(__name__, instance_relative_config=True)
 
+
 def create_value(X, r):
-    a = create_header(X,r)[1].headers
+    a = create_header(X, r)[1].headers
     b = calc(X)
     a.set('exam', str(b))
     return a
 
+
 def create_app():
     return app
 
-def create_secret(X,response):
+
+def create_secret(X, response):
     example = date.today()
-    ran, _ = create_header(X,response)
-    b = create_value(X,response)
+    ran, _ = create_header(X, response)
+    b = create_value(X, response)
     b['exam'] = "0"+(b['exam'][::-1])
     password = hashlib.md5(b['exam'].encode()).hexdigest()
-    response.headers['exan'] = example.strftime("%Y")+example.strftime("%m")+example.strftime("%d")
+    response.headers['exan'] = example.strftime(
+        "%Y")+example.strftime("%m")+example.strftime("%d")
     response.set_cookie('exam', str(4*(ran+6)/2-ran*2))
     response.set_cookie('exan', password)
     return response
+
 
 def get_input_and_compute(op, name):
     a = request.args.get('a', 0, type=float)
     b = request.args.get('b', 0, type=float)
     if name == "*":
         time.sleep(1)
-    return op(a,b)
+    return op(a, b)
+
 
 @app.route('/add')
 def add():
     value = get_input_and_compute(operator.add, "+")
     return make_response(jsonify(s=value), 200)
-    
+
+
 @app.route('/sub')
 def sub():
     value = get_input_and_compute(operator.sub, "-")
     return make_response(jsonify(s=value), 200)
+
 
 @app.route('/mul')
 def mul():
     value = get_input_and_compute(operator.mul, "*")
     return make_response(jsonify(s=value), 200)
 
+
 @app.route('/div')
 def div():
     value = get_input_and_compute(operator.truediv, "/")
     return make_response(jsonify(s=value), 200)
+
 
 @app.route('/mod')
 def mod():
     value = get_input_and_compute(operator.mod, "%")
     return make_response(jsonify(s=value), 200)
 
+
 @app.route('/secret', methods=['GET'])
 def get_secret():
-    X = request.args.get('X', type = int)
+    X = request.args.get('X', type=int)
     response = make_response(jsonify(exam=X), 200)
-    return create_secret(X,response)
+    return create_secret(X, response)
 
-#add your route here
+
+# add your route here
+
+
+
+
+@app.route('/ex1', methods=['GET'])
+def calculate_function():
+    x = request.args.get('a', default='', type=str)
+
+    if not x or not any(char.isdigit() for char in x):
+        return jsonify({'s': "Invalid Input"}), 400
+
+    D = sum(char.isdigit() for char in x)
+    C = sum(char.isalpha() for char in x)
+
+    if C == 0:
+        return jsonify({'s': "Invalid Input"}), 400
+
+    result = D / C
+    return jsonify({'s': result}), 200
+
+
+
